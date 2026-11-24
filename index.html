@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Le Sanctuaire — Abysse 33</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: #000;
+    color: #fff;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 24px;
+  }
+  .gate { text-align: center; max-width: 420px; width: 100%; }
+  .label {
+    font-family: "Anton", "Arial Narrow", sans-serif;
+    letter-spacing: .35em;
+    font-size: 13px;
+    color: #d4af37;
+    text-transform: uppercase;
+  }
+  .big33 {
+    font-family: "Anton", "Arial Narrow", sans-serif;
+    font-size: 120px;
+    line-height: 1;
+    color: #d4af37;
+    margin: 12px 0 4px;
+  }
+  h1 {
+    font-family: "Anton", "Arial Narrow", sans-serif;
+    font-size: 28px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    font-weight: 400;
+    margin-bottom: 28px;
+  }
+  input {
+    width: 100%;
+    background: #000;
+    border: 1px solid #d4af37;
+    color: #fff;
+    font-size: 17px;
+    padding: 14px 16px;
+    text-align: center;
+    outline: none;
+    border-radius: 0;
+  }
+  input:focus { border-color: #fff; }
+  button {
+    width: 100%;
+    margin-top: 12px;
+    background: #d4af37;
+    color: #000;
+    border: none;
+    font-family: "Anton", "Arial Narrow", sans-serif;
+    font-size: 17px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    padding: 14px;
+    cursor: pointer;
+    border-radius: 0;
+  }
+  button:active { background: #fff; }
+  #msg { margin-top: 18px; min-height: 22px; font-size: 15px; color: #999; }
+  #msg.error { color: #fff; }
+  #msg.ok { color: #d4af37; }
+  #enter { display: none; margin-top: 18px; }
+  #enter a {
+    display: block;
+    border: 1px solid #d4af37;
+    color: #d4af37;
+    text-decoration: none;
+    font-family: "Anton", "Arial Narrow", sans-serif;
+    font-size: 17px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    padding: 14px;
+  }
+</style>
+</head>
+<body>
+  <div class="gate">
+    <div class="label">Abysse 33</div>
+    <div class="big33">33</div>
+    <h1>Le Sanctuaire</h1>
+    <form id="form" autocomplete="off">
+      <input id="key" type="text" placeholder="La clé" autocapitalize="off" autocorrect="off" spellcheck="false">
+      <button type="submit">Ouvrir</button>
+    </form>
+    <div id="msg"></div>
+    <div id="enter">
+      <a href="https://drive.google.com/drive/folders/1TTlZz4GC-8Gq6jkHoBxs9XhNUXAPKF44" target="_blank" rel="noopener">Entrer dans Le Sanctuaire</a>
+    </div>
+  </div>
+<script>
+  var HASHES = [
+    "d85978d09ea5ec6c39049c1e78f4187536858e0f32f17cb3ea86ff3fa19824e0",
+    "9875e02411531e3a89dd908e519cfa5254b4f5ee59b902e5d673838862fe4a61"
+  ];
+  var DRIVE = "https://drive.google.com/drive/folders/1TTlZz4GC-8Gq6jkHoBxs9XhNUXAPKF44";
+  function normalize(s) {
+    return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "");
+  }
+  async function sha256hex(s) {
+    var buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
+    return Array.from(new Uint8Array(buf)).map(function (b) { return b.toString(16).padStart(2, "0"); }).join("");
+  }
+  document.getElementById("form").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    var msg = document.getElementById("msg");
+    var enter = document.getElementById("enter");
+    var value = document.getElementById("key").value || "";
+    var hash = await sha256hex(normalize(value));
+    if (HASHES.indexOf(hash) !== -1) {
+      msg.textContent = "Bienvenue dans Le Sanctuaire.";
+      msg.className = "ok";
+      enter.style.display = "block";
+    } else {
+      msg.textContent = "Ce n'est pas la clé.";
+      msg.className = "error";
+      enter.style.display = "none";
+    }
+  });
+</script>
+</body>
+</html>
